@@ -15,8 +15,18 @@
 ## 用途
 
 在任何新设备上配 Claude Code / 其他 agent 时，把这个仓库拉下来，
-让 agent 读 `AGENT-SYNC.md`，它会自动把相关 memory 加载进本机
-memory 目录并更新 `MEMORY.md` 索引。详见 [`AGENT-SYNC.md`](AGENT-SYNC.md)。
+让 agent 读 [`AGENT-SYNC.md`](AGENT-SYNC.md)。它会：
+
+1. 列出仓库里每条 memory（name + description）
+2. 列出本机现有的项目 memory 目录
+3. **逐条问你**这条 memory 装到哪个项目 / 不装（不做任何默认预选）
+4. 遇到同名文件时贴 diff 让你选覆盖/保留/重命名
+5. 更新目标项目的 `MEMORY.md` 索引
+
+Claude Code 目前**没有"跨项目全局 memory 目录"**这个概念——所有
+memory 都是绑在项目上的。如果想让某条 memory 每个 session 都加载，
+另外一条路是让 `~/.claude/CLAUDE.md` `@`-include 它（这不在 sync 流程里，
+用户按需自己加）。
 
 ## 结构
 
@@ -52,4 +62,8 @@ metadata:
 - `user` — 关于用户身份/角色/偏好的事实
 - `feedback` — 用户对 agent 工作方式的反馈（含"为什么"）
 - `reference` — 指向外部资源（URL / dashboard / 文档）
-- `project` — **不应出现在这个仓库**（放各项目自己的 memory 里）
+- `project` — 项目相关的事实
+
+**关于 `project` 类型**：这类 memory 通常只对某个项目有意义、放在这个跨项目
+仓库里意义不大。除非你确定多个项目会共用（比如公司级别的服务架构描述），
+否则建议留在本地项目 memory 目录，不要推到这里。
