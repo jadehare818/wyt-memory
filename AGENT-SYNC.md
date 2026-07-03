@@ -10,8 +10,8 @@
   存放在 `~/.claude/projects/<hashed-cwd>/memory/` 下，只在对应 cwd 起 session
   时才会自动加载。
 - 目录命名规则：**cwd 里的 `/` 替换成 `-`，其它字符原样保留**。
-  例如 `/Users/bytedance/maas-backend` → `-Users-bytedance-maas-backend`。
-  从目录名**反推 cwd 存在歧义**（`maas-backend` 也可能对应 `maas/backend`），
+  例如 `/Users/alice/some-project` → `-Users-alice-some-project`。
+  从目录名**反推 cwd 存在歧义**（`some-project` 也可能对应 `some/project`），
   所以列给用户看时**不要猜**，把带连字符的目录名原样呈现，让用户自己识别。
 - 同一台机器上会有多个项目 memory 目录，每个都独立。**不要跨项目复制**——
   用户会明确告诉你装到哪个项目。
@@ -42,10 +42,13 @@
 ```
 本机现有项目 memory 目录：
 
-  A. -Users-bytedance-maas-backend        (10 条 memory)
-  B. -Users-bytedance                     (9 条 memory)
-  C. -Users-bytedance-yopo-agent          (1 条 memory)
+  A. <dir-name-1>        (<N> 条 memory)
+  B. <dir-name-2>        (<N> 条 memory)
+  ...
 ```
+
+（`<dir-name>` 是 `~/.claude/projects/` 下的实际目录名，形如
+`-Users-you-some-project`；不要试图反推真实 cwd 展示，因为该编码存在歧义。）
 
 如果 `~/.claude/projects/` 下没有 memory 目录，直接告诉用户"还没有项目
 memory 目录，请先在某个项目里让 Claude Code 建过至少一条 memory 再试"，
@@ -55,7 +58,7 @@ memory 目录，请先在某个项目里让 Claude Code 建过至少一条 memor
 
 对 Step 1 列出的每条 memory，问一次：
 
-- 装到 A（`-Users-bytedance-maas-backend`）？
+- 装到 A（Step 2 里的第一个目录）？
 - 装到 B？
 - 装到 C？
 - 不装？
